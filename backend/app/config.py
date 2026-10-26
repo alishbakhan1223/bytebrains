@@ -1,7 +1,14 @@
 import os
+from pathlib import Path
 from typing import List, Union
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 from pydantic import AnyHttpUrl, field_validator
+
+# Always load .env relative to the backend directory, NOT current working directory
+BACKEND_DIR = Path(__file__).resolve().parent.parent
+ENV_PATH = BACKEND_DIR / ".env"
+load_dotenv(ENV_PATH, override=True)
 
 
 class Settings(BaseSettings):
@@ -21,6 +28,15 @@ class Settings(BaseSettings):
     # Automation
     AUTOMATION_ENABLED: bool = True
 
+    # LLM Provider Configuration
+    GEMINI_API_KEY: str = ""
+    GROQ_API_KEY: str = ""
+    OPENAI_API_KEY: str = ""
+
+    GEMINI_MODEL: str = "gemini-flash-lite-latest"
+    GROQ_MODEL: str = "qwen/qwen3.8-27b"
+    OPENAI_MODEL: str = "gpt-4o-mini"
+
     # CORS
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
@@ -29,7 +45,7 @@ class Settings(BaseSettings):
     ]
 
     model_config = {
-        "env_file": ".env",
+        "env_file": str(ENV_PATH),
         "case_sensitive": True,
         "extra": "ignore",
     }

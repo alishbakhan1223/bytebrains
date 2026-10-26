@@ -238,10 +238,11 @@ export const api = {
     request<any>(`/notifications/${id}/read`, { method: "PUT" }),
 
   // BloodBridge Assistant (Grounded Chatbot)
-  chatMessage: (message: string) =>
+  getAssistantHealth: () => request<any>("/assistant/health"),
+  chatMessage: (message: string, history?: { role: string; content: string }[]) =>
     request<any>("/chat", {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, history }),
     }),
   confirmChatAction: (action_type: string, parameters: any) =>
     request<any>("/chat/confirm", {

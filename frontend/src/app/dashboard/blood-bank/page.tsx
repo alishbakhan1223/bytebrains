@@ -109,12 +109,12 @@ export default function BloodBankDashboard() {
   if (error) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="p-6 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300">
-          <h2 className="text-lg font-bold mb-2">Error Connecting to Dashboard</h2>
-          <p className="text-sm mb-4">{error}</p>
+        <div className="p-6 rounded-2xl bg-white border border-red-200 text-red-700 shadow-xl">
+          <h2 className="text-xl font-bold mb-2 text-[#111827]">Error Connecting to Dashboard</h2>
+          <p className="text-base mb-4 text-[#374151]">{error}</p>
           <button
             onClick={loadDashboard}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700"
+            className="px-5 py-2.5 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors shadow-md"
           >
             Retry Connection
           </button>
@@ -129,16 +129,16 @@ export default function BloodBankDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Top Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+      {/* Top Banner (outside cards, on dark atmospheric canvas: text-white) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/15">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-200">
               Live Blood Bank Operations
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-white mt-1 drop-shadow-sm tracking-tight">
             {data?.blood_bank_name || "Blood Bank Facility"}
           </h1>
         </div>
@@ -146,7 +146,7 @@ export default function BloodBankDashboard() {
         <div className="flex items-center space-x-3">
           <Link
             href="/inventory"
-            className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl shadow-sm text-sm flex items-center space-x-2 transition-colors"
+            className="px-4 py-2.5 bg-[#DC2626] hover:bg-red-700 text-white font-bold rounded-xl shadow-md text-sm flex items-center space-x-2 transition-all hover:scale-105"
           >
             <Plus className="w-4 h-4" />
             <span>Manage Inventory</span>
@@ -156,89 +156,127 @@ export default function BloodBankDashboard() {
 
       {/* Low Stock Warning Banner if any */}
       {kpis.low_stock_groups_count > 0 && (
-        <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 flex items-start space-x-3 text-amber-900 dark:text-amber-200">
-          <AlertTriangle className="w-5 h-5 flex-shrink-0 text-amber-600 mt-0.5" />
+        <div className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 flex items-start space-x-3 text-amber-950 shadow-sm">
+          <AlertTriangle className="w-6 h-6 flex-shrink-0 text-amber-600 mt-0.5" />
           <div className="flex-1">
-            <h2 className="text-sm font-bold">Safety Stock Threshold Alert</h2>
-            <p className="text-xs mt-0.5 text-amber-800 dark:text-amber-300">
-              {kpis.low_stock_groups_count} blood group(s) are currently below configured minimum safety thresholds (e.g. O-, AB-). Action required.
+            <h2 className="text-sm font-bold text-[#111827]">Safety Stock Threshold Alert</h2>
+            <p className="text-xs mt-0.5 text-[#374151] font-semibold">
+              {kpis.low_stock_groups_count} blood group(s) are currently below configured minimum safety thresholds (e.g. O-, AB-). Immediate donor mobilization or inter-facility transfer required.
             </p>
           </div>
         </div>
       )}
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
-            Available Units
-          </span>
-          <span className="text-3xl font-extrabold text-slate-900 dark:text-white mt-1 block">
+      {/* KPI Cards: Big numbers #111827 36-40px font-extrabold, labels #374151 font-semibold, accent borders */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Available Units */}
+        <div className="p-5 rounded-2xl bg-white border-l-4 border-l-emerald-600 border border-slate-200/90 shadow-md flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#374151] uppercase tracking-wider block">
+              Available Units
+            </span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
+              <Droplet className="w-4 h-4 text-emerald-600" />
+            </div>
+          </div>
+          <span className="text-[38px] font-extrabold text-[#111827] leading-none block mt-2 tracking-tight">
             {kpis.total_available_units ?? 0}
           </span>
-          <span className="text-xs text-emerald-600 font-medium mt-1 flex items-center">
+          <span className="text-[13px] text-emerald-700 font-bold mt-2 flex items-center">
             Ready for dispatch
           </span>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
-            Low Stock Groups
-          </span>
-          <span className="text-3xl font-extrabold text-amber-600 mt-1 block">
+        {/* Low Stock Groups */}
+        <div className="p-5 rounded-2xl bg-white border-l-4 border-l-amber-500 border border-slate-200/90 shadow-md flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#374151] uppercase tracking-wider block">
+              Low Stock Groups
+            </span>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
+              <AlertTriangle className="w-4 h-4 text-amber-600" />
+            </div>
+          </div>
+          <span className="text-[38px] font-extrabold text-[#111827] leading-none block mt-2 tracking-tight">
             {kpis.low_stock_groups_count ?? 0}
           </span>
-          <span className="text-xs text-slate-400 mt-1 block">Below safety reserve</span>
+          <span className="text-[13px] text-amber-800 font-semibold mt-2 block">
+            Below safety reserve
+          </span>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
-            Critical Expiry (≤3d)
-          </span>
-          <span className="text-3xl font-extrabold text-rose-600 mt-1 block">
+        {/* Critical Expiry */}
+        <div className="p-5 rounded-2xl bg-white border-l-4 border-l-[#DC2626] border border-slate-200/90 shadow-md flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#374151] uppercase tracking-wider block">
+              Critical Expiry (≤3d)
+            </span>
+            <div className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-[#DC2626]">
+              <Clock className="w-4 h-4 text-[#DC2626]" />
+            </div>
+          </div>
+          <span className="text-[38px] font-extrabold text-[#111827] leading-none block mt-2 tracking-tight">
             {kpis.critical_expiry_count ?? 0}
           </span>
-          <span className="text-xs text-rose-500 font-medium mt-1 block">Requires prioritization</span>
+          <span className="text-[13px] text-red-700 font-bold mt-2 block">
+            Requires prioritization
+          </span>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
-            Pending Requests
-          </span>
-          <span className="text-3xl font-extrabold text-blue-600 mt-1 block">
+        {/* Pending Requests */}
+        <div className="p-5 rounded-2xl bg-white border-l-4 border-l-blue-600 border border-slate-200/90 shadow-md flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#374151] uppercase tracking-wider block">
+              Pending Requests
+            </span>
+            <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+              <ShieldAlert className="w-4 h-4 text-blue-600" />
+            </div>
+          </div>
+          <span className="text-[38px] font-extrabold text-[#111827] leading-none block mt-2 tracking-tight">
             {kpis.pending_requests_count ?? 0}
           </span>
-          <span className="text-xs text-blue-500 font-medium mt-1 block">Awaiting review</span>
+          <span className="text-[13px] text-blue-700 font-semibold mt-2 block">
+            Awaiting review
+          </span>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
-            Emergency Requests
-          </span>
-          <span className="text-3xl font-extrabold text-red-600 mt-1 block">
+        {/* Emergency Requests */}
+        <div className="p-5 rounded-2xl bg-white border-l-4 border-l-purple-600 border border-slate-200/90 shadow-md flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#374151] uppercase tracking-wider block">
+              Emergency Requests
+            </span>
+            <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600">
+              <AlertTriangle className="w-4 h-4 text-purple-600" />
+            </div>
+          </div>
+          <span className="text-[38px] font-extrabold text-[#111827] leading-none block mt-2 tracking-tight">
             {kpis.emergency_requests_count ?? 0}
           </span>
-          <span className="text-xs text-red-500 font-medium mt-1 block">Critical priority</span>
+          <span className="text-[13px] text-purple-700 font-bold mt-2 block">
+            Critical priority
+          </span>
         </div>
       </div>
 
       {/* Inventory by Blood Group Grid */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-md">
+        <div className="flex items-center justify-between mb-6 pb-3 border-b border-slate-100">
           <div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+            <h2 className="text-xl font-bold text-[#111827]">
               Blood Group Inventory Availability
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-sm text-[#4B5563] font-medium mt-0.5">
               Live available units vs configured safety threshold
             </p>
           </div>
           <Link
             href="/inventory"
-            className="text-xs font-semibold text-red-600 dark:text-red-400 hover:underline flex items-center"
+            className="text-sm font-bold text-[#B91C1C] hover:text-red-800 flex items-center transition-colors"
           >
             <span>View All Batches</span>
-            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+            <ArrowRight className="w-4 h-4 ml-1" />
           </Link>
         </div>
 
@@ -250,25 +288,34 @@ export default function BloodBankDashboard() {
                 key={g.blood_group}
                 className={`p-4 rounded-xl border text-center relative overflow-hidden transition-all ${
                   g.is_low_stock
-                    ? "border-amber-300 dark:border-amber-900/60 bg-amber-50/40 dark:bg-amber-950/20"
-                    : "border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40"
+                    ? "border-red-300 bg-red-50/70"
+                    : "border-slate-200 bg-[#F9FAFB]"
                 }`}
               >
                 {g.is_low_stock && (
-                  <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-500" title="Low Stock" />
+                  <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-600 animate-ping" title="Low Stock" />
                 )}
-                <span className="text-lg font-black text-slate-900 dark:text-white block">
+                <span className="text-lg font-black text-[#111827] block">
                   {g.blood_group}
                 </span>
-                <span className="text-2xl font-extrabold text-red-600 dark:text-red-500 my-1 block">
+                <span className="text-3xl font-extrabold text-[#B91C1C] my-1.5 block leading-none">
                   {g.available_units}
                 </span>
-                <span className="text-[10px] text-slate-400 block">
-                  Min: {g.min_threshold} units
+                <span className="text-[13px] text-[#374151] block font-semibold">
+                  Threshold: {g.min_threshold}
                 </span>
-                <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                <span
+                  className={`text-[11px] font-extrabold px-2 py-0.5 rounded mt-2.5 inline-block ${
+                    g.is_low_stock
+                      ? "bg-red-200 text-red-950 border border-red-300"
+                      : "bg-emerald-100 text-emerald-950 border border-emerald-300"
+                  }`}
+                >
+                  {g.is_low_stock ? "DEFICIT" : "HEALTHY"}
+                </span>
+                <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2.5 overflow-hidden">
                   <div
-                    className={`h-full rounded-full ${g.is_low_stock ? "bg-amber-500" : "bg-emerald-500"}`}
+                    className={`h-full rounded-full ${g.is_low_stock ? "bg-red-600" : "bg-emerald-600"}`}
                     style={{ width: `${pct}%` }}
                   />
                 </div>
@@ -279,86 +326,86 @@ export default function BloodBankDashboard() {
       </div>
 
       {/* Hospital Blood Requests Processing Queue */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-md">
+        <div className="flex items-center justify-between mb-5 pb-3 border-b border-slate-100">
           <div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+            <h2 className="text-xl font-bold text-[#111827]">
               Incoming Hospital Requests
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-sm text-[#4B5563] font-medium mt-0.5">
               Review and authorize hospital emergency blood supply dispatch
             </p>
           </div>
           <Link
             href="/requests"
-            className="text-xs font-semibold text-red-600 dark:text-red-400 hover:underline flex items-center"
+            className="text-sm font-bold text-[#B91C1C] hover:text-red-800 flex items-center transition-colors"
           >
             <span>View All Requests</span>
-            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+            <ArrowRight className="w-4 h-4 ml-1" />
           </Link>
         </div>
 
         {recentReqs.length === 0 ? (
-          <p className="text-sm text-slate-400 py-6 text-center">No active requests.</p>
+          <p className="text-sm text-[#4B5563] py-8 text-center font-medium">No active requests awaiting processing.</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          <div className="overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full text-left text-[14px]">
+              <thead className="bg-slate-50 border-b border-slate-200 text-xs font-bold text-[#374151] uppercase tracking-wider">
                 <tr>
-                  <th className="py-3 px-3">Req ID</th>
-                  <th className="py-3 px-3">Hospital</th>
-                  <th className="py-3 px-3">Group</th>
-                  <th className="py-3 px-3">Requested</th>
-                  <th className="py-3 px-3">Fulfilled</th>
-                  <th className="py-3 px-3">Priority</th>
-                  <th className="py-3 px-3">Status</th>
-                  <th className="py-3 px-3 text-right">Actions</th>
+                  <th className="py-3.5 px-4">Req ID</th>
+                  <th className="py-3.5 px-4">Hospital</th>
+                  <th className="py-3.5 px-4">Group</th>
+                  <th className="py-3.5 px-4">Requested</th>
+                  <th className="py-3.5 px-4">Fulfilled</th>
+                  <th className="py-3.5 px-4">Priority</th>
+                  <th className="py-3.5 px-4">Status</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+              <tbody className="divide-y divide-slate-100 font-sans text-[14px]">
                 {recentReqs.map((r: any) => (
-                  <tr key={r.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
-                    <td className="py-3.5 px-3 font-mono font-medium text-slate-500">#{r.id}</td>
-                    <td className="py-3.5 px-3 font-medium text-slate-900 dark:text-white">
+                  <tr key={r.id} className="hover:bg-[#FEF2F2] transition-colors border-b border-slate-100">
+                    <td className="py-3.5 px-4 font-mono font-medium text-[#4B5563]">#{r.id}</td>
+                    <td className="py-3.5 px-4 font-semibold text-[#111827]">
                       {r.hospital_name}
                     </td>
-                    <td className="py-3.5 px-3 font-bold text-red-600">{r.blood_group}</td>
-                    <td className="py-3.5 px-3 font-semibold">{r.quantity} units</td>
-                    <td className="py-3.5 px-3 text-slate-500">{r.fulfilled_quantity} units</td>
-                    <td className="py-3.5 px-3">
+                    <td className="py-3.5 px-4 font-extrabold text-[#B91C1C] text-base">{r.blood_group}</td>
+                    <td className="py-3.5 px-4 font-bold text-[#1F2937]">{r.quantity} units</td>
+                    <td className="py-3.5 px-4 text-[#4B5563] font-medium">{r.fulfilled_quantity} units</td>
+                    <td className="py-3.5 px-4">
                       <span
-                        className={`text-xs px-2.5 py-0.5 rounded-full font-semibold border ${
+                        className={`text-xs px-2.5 py-1 rounded-md font-bold border ${
                           r.priority === "Critical"
-                            ? "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 border-rose-300"
+                            ? "bg-red-100 text-red-950 border-red-300"
                             : r.priority === "Urgent"
-                            ? "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-300"
-                            : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-300"
+                            ? "bg-amber-100 text-amber-950 border-amber-300"
+                            : "bg-slate-100 text-slate-800 border-slate-300"
                         }`}
                       >
                         {r.priority}
                       </span>
                     </td>
-                    <td className="py-3.5 px-3">
+                    <td className="py-3.5 px-4">
                       <span
-                        className={`text-xs px-2.5 py-0.5 rounded-full font-semibold border ${
+                        className={`text-xs px-2.5 py-1 rounded-md font-bold border ${
                           r.status === "Fulfilled"
-                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-300"
+                            ? "bg-emerald-100 text-emerald-950 border-emerald-300"
                             : r.status === "Approved"
-                            ? "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-300"
+                            ? "bg-blue-100 text-blue-950 border-blue-300"
                             : r.status === "Rejected"
-                            ? "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border-red-300"
-                            : "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-300"
+                            ? "bg-red-100 text-red-950 border-red-300"
+                            : "bg-amber-100 text-amber-950 border-amber-300"
                         }`}
                       >
                         {r.status}
                       </span>
                     </td>
-                    <td className="py-3.5 px-3 text-right space-x-2">
+                    <td className="py-3.5 px-4 text-right space-x-2">
                       {r.status === "Submitted" && (
                         <button
                           onClick={() => handleApprove(r.id)}
                           disabled={actionLoading}
-                          className="px-2.5 py-1 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                          className="px-3 py-1.5 text-xs font-bold bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm"
                         >
                           Approve
                         </button>
@@ -370,7 +417,7 @@ export default function BloodBankDashboard() {
                             setFulfillUnits(r.quantity - r.fulfilled_quantity);
                             setFulfillNote("");
                           }}
-                          className="px-2.5 py-1 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 shadow-sm"
+                          className="px-3 py-1.5 text-xs font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 shadow-sm"
                         >
                           Fulfill
                         </button>
@@ -379,7 +426,7 @@ export default function BloodBankDashboard() {
                         <button
                           onClick={() => handleReject(r.id)}
                           disabled={actionLoading}
-                          className="px-2 py-1 text-xs font-semibold text-slate-500 hover:text-red-600"
+                          className="px-2.5 py-1.5 text-xs font-bold text-[#374151] hover:text-red-700"
                         >
                           Reject
                         </button>
@@ -395,18 +442,18 @@ export default function BloodBankDashboard() {
 
       {/* Fulfillment Modal Dialog */}
       {selectedRequest && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-slate-200 shadow-2xl">
+            <h3 className="text-xl font-bold text-[#111827] mb-2">
               Fulfill Blood Request #{selectedRequest.id}
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
-              Authorized release of <span className="font-bold text-red-600">{selectedRequest.blood_group}</span> units for <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedRequest.hospital_name}</span>. Inventory will be automatically deducted using FEFO (First-Expiry-First-Out).
+            <p className="text-sm text-[#4B5563] mb-4">
+              Authorized release of <span className="font-extrabold text-[#B91C1C]">{selectedRequest.blood_group}</span> units for <span className="font-bold text-[#111827]">{selectedRequest.hospital_name}</span>. Inventory will be automatically deducted using FEFO (First-Expiry-First-Out).
             </p>
 
             <form onSubmit={handleFulfillSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#374151] mb-1">
                   Units to Dispatch (Remaining: {selectedRequest.quantity - selectedRequest.fulfilled_quantity})
                 </label>
                 <input
@@ -415,13 +462,13 @@ export default function BloodBankDashboard() {
                   max={selectedRequest.quantity - selectedRequest.fulfilled_quantity}
                   value={fulfillUnits}
                   onChange={(e) => setFulfillUnits(parseInt(e.target.value) || 0)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-[#111827] font-semibold text-sm focus:border-red-500 focus:outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#374151] mb-1">
                   Dispatch Notes / Courier Ref
                 </label>
                 <input
@@ -429,22 +476,22 @@ export default function BloodBankDashboard() {
                   placeholder="e.g. Dispatched via Emergency Transit Van #4"
                   value={fulfillNote}
                   onChange={(e) => setFulfillNote(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-[#111827] font-semibold text-sm focus:border-red-500 focus:outline-none"
                 />
               </div>
 
-              <div className="flex items-center justify-end space-x-3 pt-3">
+              <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setSelectedRequest(null)}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-400"
+                  className="px-4 py-2 text-sm font-bold text-[#374151] hover:text-[#111827]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm"
+                  className="px-5 py-2.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md transition-colors"
                 >
                   {actionLoading ? "Processing Atomic Deduction..." : "Confirm & Fulfill"}
                 </button>

@@ -116,8 +116,16 @@ export default function Navbar() {
     (item) => !item.roles || (user && item.roles.includes(user.role))
   );
 
+  const isHero = pathname === "/" || pathname === "/login" || pathname === "/register";
+
   return (
-    <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+    <header
+      className={`sticky top-0 z-50 backdrop-blur-md transition-colors border-b ${
+        isHero
+          ? "bg-slate-950/70 border-white/10 text-white shadow-sm"
+          : "bg-white/90 dark:bg-slate-900/90 border-slate-200/80 dark:border-slate-800/80 text-slate-900 dark:text-white"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <div className="flex items-center space-x-4">
@@ -126,7 +134,7 @@ export default function Navbar() {
               <Droplet className="w-5 h-5 fill-white" />
             </div>
             <div>
-              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+              <span className={`text-xl font-bold tracking-tight ${isHero ? "text-white" : "text-slate-900 dark:text-white"}`}>
                 Blood<span className="text-red-600">Bridge</span>
               </span>
             </div>
@@ -224,7 +232,11 @@ export default function Navbar() {
             <div className="flex items-center space-x-2">
               <Link
                 href="/login"
-                className="px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-slate-900 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-colors ${
+                  isHero
+                    ? "text-white hover:text-white hover:bg-white/15"
+                    : "text-slate-700 dark:text-slate-200 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800"
+                }`}
               >
                 Sign In
               </Link>

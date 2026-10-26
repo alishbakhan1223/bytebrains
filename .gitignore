@@ -34,3 +34,15 @@ frontend/.env.local
 .vscode/
 .idea/
 .pytest_cache/
+.env
+.env.local
+backend/.env
+frontend/.env.local
+backend/firebase-service-account.json
+venv/
+backend/venv/
+node_modules/
+frontend/node_modules/
+frontend/.next/
+__pycache__/
+*.db

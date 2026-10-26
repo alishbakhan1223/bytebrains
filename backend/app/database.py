@@ -24,7 +24,10 @@ except Exception as exc:
     # Keep the app bootable so the error can be diagnosed instead of crashing at import
     DATABASE_INIT_ERROR = f"{type(exc).__name__}: {exc}"
     logger.exception("Could not create database engine; falling back to temporary SQLite")
-    fallback_url = "sqlite:////tmp/bloodbridge.db"
+    import tempfile
+    from pathlib import Path
+    temp_db = Path(tempfile.gettempdir()) / "bloodbridge_fallback.db"
+    fallback_url = f"sqlite:///{temp_db.as_posix()}"
     engine = create_engine(fallback_url, connect_args=_connect_args(fallback_url))
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

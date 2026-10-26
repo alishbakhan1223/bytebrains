@@ -1,47 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap");
 @import "tailwindcss";
 
 @layer base {
   :root {
-    --background: #f1f5f9;
-    --foreground: #0f172a;
+    --background: transparent;
+    --foreground: #111827;
     --card: #ffffff;
-    --card-foreground: #0f172a;
+    --card-bg: #ffffff;
+    --card-foreground: #111827;
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --text-muted: #4B5563;
     --primary: #dc2626;
     --primary-foreground: #ffffff;
     --border: #e2e8f0;
   }
 
   .dark {
-    --background: #090d16;
-    --foreground: #f8fafc;
-    --card: #0f172a;
-    --card-foreground: #f8fafc;
+    --background: transparent;
+    --foreground: #111827;
+    --card: #ffffff;
+    --card-bg: #ffffff;
+    --card-foreground: #111827;
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --text-muted: #4B5563;
     --primary: #ef4444;
     --primary-foreground: #ffffff;
-    --border: #1e293b;
+    --border: #e2e8f0;
   }
 
-  /* Dark mode follows the OS setting, so form fields need explicit light text */
-  @media (prefers-color-scheme: dark) {
-    input,
-    select,
-    textarea {
-      color: #ffffff;
-    }
+  /* Form inputs on light cards must stay dark (#111827) with high contrast */
+  input:not([class*="text-white"]):not([class*="bg-slate-900"]):not([class*="bg-black"]),
+  select:not([class*="text-white"]):not([class*="bg-slate-900"]):not([class*="bg-black"]),
+  textarea:not([class*="text-white"]):not([class*="bg-slate-900"]):not([class*="bg-black"]) {
+    color: #111827;
+  }
 
-    input::placeholder,
-    textarea::placeholder {
-      color: #ffffff;
-      opacity: 1;
-    }
+  input:not([class*="text-white"]):not([class*="bg-slate-900"]):not([class*="bg-black"])::placeholder,
+  textarea:not([class*="text-white"]):not([class*="bg-slate-900"]):not([class*="bg-black"])::placeholder {
+    color: #6B7280;
+    opacity: 1;
   }
 }
 
 body {
-  background-color: var(--background);
+  background-color: #0b0f19;
   color: var(--foreground);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Glassmorphism / solid cards for dashboard: Solid white (or 95% opacity), high contrast */
+div[class*="bg-white"][class*="rounded-2xl"],
+div[class*="bg-white"][class*="rounded-3xl"],
+div[class*="bg-white"][class*="rounded-xl"],
+.card-surface {
+  background-color: #ffffff !important;
+  color: #111827;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  color: #111827;
+}
+
+/* 3D and Cinematic Animations */
+@keyframes kenburns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.06) translate(-1%, -0.5%);
+  }
+  100% {
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+@keyframes floatDropSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(4deg);
+  }
+}
+
+@keyframes floatDropMedium {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(-4deg);
+  }
+}
+
+@keyframes floatDropFast {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.06);
+  }
+}
+
+.animate-ken-burns {
+  animation: kenburns 35s ease-in-out infinite alternate;
+}
+
+.animate-float-slow {
+  animation: floatDropSlow 8s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: floatDropMedium 6s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: floatDropFast 4.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ken-burns,
+  .animate-float-slow,
+  .animate-float-medium,
+  .animate-float-fast {
+    animation: none !important;
+    transform: none !important;
+  }
 }

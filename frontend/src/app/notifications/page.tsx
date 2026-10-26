@@ -55,17 +55,17 @@ export default function NotificationsPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-white/10">
         <div>
           <div className="flex items-center space-x-2">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
               Notification Center
             </h1>
-            <span className="bg-slate-100 text-slate-700 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-slate-300">
+            <span className="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded-full font-bold border border-white/30">
               {notifications.length} alerts
             </span>
           </div>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-200 mt-1">
             Real-time operational alerts dispatched via BloodBridge internal automation workflows.
           </p>
         </div>
@@ -77,10 +77,10 @@ export default function NotificationsPage() {
           <button
             key={t}
             onClick={() => setFilterType(t)}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
+            className={`px-3.5 py-1.5 rounded-lg font-bold transition-colors ${
               filterType === t
-                ? "bg-red-600 text-white shadow-sm font-semibold"
-                : "bg-slate-100 dark:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                ? "bg-[#DC2626] text-white shadow-sm"
+                : "bg-white/15 text-white/90 hover:bg-white/25 hover:text-white border border-white/10 backdrop-blur-sm"
             }`}
           >
             {t.replace("_", " ")}
@@ -91,42 +91,42 @@ export default function NotificationsPage() {
       {/* Notifications List */}
       <div className="space-y-3">
         {loading ? (
-          <div className="p-12 text-center text-slate-400">Loading alerts...</div>
+          <div className="p-12 text-center text-slate-200 font-medium">Loading alerts...</div>
         ) : filtered.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div className="p-12 text-center text-[#4B5563] font-medium bg-white rounded-2xl border border-slate-200 shadow-sm">
             No active alerts found matching filter.
           </div>
         ) : (
           filtered.map((n) => (
             <div
               key={n.id}
-              className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:shadow-sm transition-shadow flex items-start space-x-3.5"
+              className="p-5 bg-white rounded-2xl border border-slate-200 hover:shadow-md transition-shadow flex items-start space-x-4 shadow-sm"
             >
-              <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 shrink-0 mt-0.5">
+              <div className="p-2.5 rounded-xl bg-slate-100 shrink-0 mt-0.5">
                 {getIcon(n.type)}
               </div>
 
               <div className="flex-1 min-w-0 space-y-1">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white">
+                    <span className="text-sm font-extrabold text-[#111827]">
                       {n.type.replace("_", " ")}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className="text-xs text-[#4B5563] font-mono font-semibold">
                       To: {n.recipient}
                     </span>
                   </div>
-                  <span className="text-[11px] text-slate-400 whitespace-nowrap">
+                  <span className="text-xs text-[#4B5563] font-medium whitespace-nowrap">
                     {new Date(n.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                <p className="text-sm text-[#1F2937] leading-relaxed font-medium">
                   {n.message}
                 </p>
 
                 {n.metadata_json && (
-                  <div className="mt-2 text-[10px] font-mono text-slate-500 bg-slate-50 dark:bg-slate-800/60 p-2 rounded max-w-2xl overflow-x-auto">
+                  <div className="mt-2 text-xs font-mono text-[#374151] bg-slate-50 border border-slate-200 p-2.5 rounded-lg max-w-2xl overflow-x-auto">
                     {JSON.stringify(n.metadata_json)}
                   </div>
                 )}

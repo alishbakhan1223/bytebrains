@@ -47,24 +47,25 @@ export default function AuditLogsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+      {/* Header (outside cards, on dark atmospheric canvas: text-white) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/15">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-sm">
             System Compliance & Audit Trail
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-sm text-slate-200 mt-1 font-medium">
             Immutable healthcare compliance records of all security, inventory, and request lifecycle actions
           </p>
         </div>
       </div>
 
       {/* Filter toolbar */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap gap-3 items-center justify-between">
+      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-md flex flex-wrap gap-3 items-center justify-between">
         <div className="flex flex-wrap items-center gap-2">
           <select
             value={entityFilter}
             onChange={(e) => setEntityFilter(e.target.value)}
-            className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium"
+            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-[#111827] font-bold"
           >
             <option value="">All Entities</option>
             <option value="BLOOD_REQUEST">Blood Requests</option>
@@ -76,7 +77,7 @@ export default function AuditLogsPage() {
           <select
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
-            className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium"
+            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-[#111827] font-bold"
           >
             <option value="">All Actions</option>
             <option value="REQUEST_SUBMITTED">REQUEST_SUBMITTED</option>
@@ -93,48 +94,48 @@ export default function AuditLogsPage() {
                 setEntityFilter("");
                 setActionFilter("");
               }}
-              className="text-xs text-purple-600 font-semibold hover:underline px-2"
+              className="text-xs text-[#B91C1C] font-bold hover:underline px-2"
             >
               Reset
             </button>
           )}
         </div>
 
-        <div className="text-xs text-slate-400 font-medium">
+        <div className="text-xs text-[#4B5563] font-bold">
           Showing {logs.length} logged record(s)
         </div>
       </div>
 
-      {/* Logs Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      {/* Logs Table (solid white card, #374151 header 12-13px uppercase, #4B5563 timestamp, #111827 user, #374151 entity, #1F2937 description 14px, dark pill action badges, #FEF2F2 hover) */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-slate-400">
-            <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-purple-600" />
-            <p className="text-sm">Loading audit records...</p>
+          <div className="p-12 text-center text-[#4B5563]">
+            <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-[#DC2626]" />
+            <p className="text-sm font-semibold">Loading audit records...</p>
           </div>
         ) : logs.length === 0 ? (
-          <div className="p-12 text-center text-slate-400">
-            <p className="text-sm">No audit logs found matching criteria.</p>
+          <div className="p-12 text-center text-[#4B5563]">
+            <p className="text-sm font-semibold">No audit logs found matching criteria.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm font-mono text-xs">
-              <thead className="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-slate-50/50 dark:bg-slate-800/50 font-sans">
+            <table className="w-full text-left text-[14px]">
+              <thead className="border-b border-slate-200 text-xs font-bold text-[#374151] uppercase tracking-wider bg-slate-50">
                 <tr>
-                  <th className="py-3 px-4">Log ID</th>
-                  <th className="py-3 px-4">Timestamp</th>
-                  <th className="py-3 px-4">User</th>
-                  <th className="py-3 px-4">Action</th>
-                  <th className="py-3 px-4">Entity</th>
-                  <th className="py-3 px-4">Entity ID</th>
-                  <th className="py-3 px-4">Description</th>
+                  <th className="py-3.5 px-4">Log ID</th>
+                  <th className="py-3.5 px-4">Timestamp</th>
+                  <th className="py-3.5 px-4">User</th>
+                  <th className="py-3.5 px-4">Action</th>
+                  <th className="py-3.5 px-4">Entity</th>
+                  <th className="py-3.5 px-4">Entity ID</th>
+                  <th className="py-3.5 px-4">Description</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+              <tbody className="divide-y divide-slate-100 font-sans">
                 {logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
-                    <td className="py-3 px-4 text-slate-400">#{log.id}</td>
-                    <td className="py-3 px-4 text-slate-500 whitespace-nowrap">
+                  <tr key={log.id} className="hover:bg-[#FEF2F2] transition-colors border-b border-slate-100">
+                    <td className="py-3.5 px-4 font-mono font-medium text-[#4B5563]">#{log.id}</td>
+                    <td className="py-3.5 px-4 font-mono text-[13px] text-[#4B5563] whitespace-nowrap font-medium">
                       {new Date(log.timestamp).toLocaleString([], {
                         month: "short",
                         day: "numeric",
@@ -143,17 +144,17 @@ export default function AuditLogsPage() {
                         second: "2-digit",
                       })}
                     </td>
-                    <td className="py-3 px-4 font-sans font-semibold text-slate-800 dark:text-slate-200">
+                    <td className="py-3.5 px-4 font-semibold text-[#111827] text-[14px]">
                       {log.user_name || "System"}
                     </td>
-                    <td className="py-3 px-4">
-                      <span className="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded font-semibold border border-purple-200 dark:border-purple-800">
+                    <td className="py-3.5 px-4">
+                      <span className="bg-[#111827] text-white px-2.5 py-1 rounded-md font-bold text-xs shadow-sm inline-block">
                         {log.action}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-slate-500">{log.entity_type}</td>
-                    <td className="py-3 px-4 text-slate-400">#{log.entity_id || "—"}</td>
-                    <td className="py-3 px-4 font-sans text-slate-600 dark:text-slate-300 max-w-lg truncate" title={log.description}>
+                    <td className="py-3.5 px-4 text-[#374151] font-medium text-[14px]">{log.entity_type}</td>
+                    <td className="py-3.5 px-4 font-mono text-[#4B5563] text-xs">#{log.entity_id || "—"}</td>
+                    <td className="py-3.5 px-4 text-[#1F2937] text-[14px] font-normal max-w-lg truncate" title={log.description}>
                       {log.description}
                     </td>
                   </tr>

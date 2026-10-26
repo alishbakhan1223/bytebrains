@@ -139,13 +139,13 @@ export default function RequestsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+      {/* Header (outside cards, on dark atmospheric canvas: text-white) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/15">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-sm">
             Blood Supply Requests & Dispatch
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-sm text-slate-200 mt-1 font-medium">
             Real-time inter-facility blood requests, priority alerts, and authorized dispatch
           </p>
         </div>
@@ -154,7 +154,7 @@ export default function RequestsPage() {
           {(user?.role === "hospital_staff" || user?.role === "admin") && (
             <button
               onClick={() => setShowCreateModal(true)}
-              className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl shadow-md shadow-red-500/20 text-sm flex items-center space-x-2 transition-all hover:scale-[1.02]"
+              className="px-5 py-2.5 bg-[#DC2626] hover:bg-red-700 text-white font-bold rounded-xl shadow-md text-sm flex items-center space-x-2 transition-all hover:scale-105"
             >
               <Plus className="w-4 h-4" />
               <span>Create Blood Request</span>
@@ -164,13 +164,13 @@ export default function RequestsPage() {
       </div>
 
       {/* Filter toolbar */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap gap-3 items-center justify-between">
+      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-md flex flex-wrap gap-3 items-center justify-between">
         <div className="flex flex-wrap items-center gap-2">
           {/* Blood group */}
           <select
             value={groupFilter}
             onChange={(e) => setGroupFilter(e.target.value)}
-            className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium"
+            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-[#111827] font-bold"
           >
             <option value="">All Blood Groups</option>
             {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((g) => (
@@ -184,7 +184,7 @@ export default function RequestsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium"
+            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-[#111827] font-bold"
           >
             <option value="">All Statuses</option>
             <option value="Submitted">Submitted</option>
@@ -199,7 +199,7 @@ export default function RequestsPage() {
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium"
+            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-[#111827] font-bold"
           >
             <option value="">All Priorities</option>
             <option value="Critical">Critical</option>
@@ -214,76 +214,76 @@ export default function RequestsPage() {
                 setPriorityFilter("");
                 setGroupFilter("");
               }}
-              className="text-xs text-red-600 font-semibold hover:underline px-2"
+              className="text-xs text-[#B91C1C] font-bold hover:underline px-2"
             >
               Reset
             </button>
           )}
         </div>
 
-        <div className="text-xs text-slate-400 font-medium">
+        <div className="text-xs text-[#4B5563] font-bold">
           Showing {requests.length} request(s)
         </div>
       </div>
 
       {/* Requests Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-slate-400">
-            <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-red-600" />
-            <p className="text-sm">Loading blood requests...</p>
+          <div className="p-12 text-center text-[#4B5563]">
+            <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-[#DC2626]" />
+            <p className="text-sm font-semibold">Loading blood requests...</p>
           </div>
         ) : requests.length === 0 ? (
-          <div className="p-12 text-center text-slate-400">
-            <p className="text-sm">No blood requests match filter criteria.</p>
+          <div className="p-12 text-center text-[#4B5563]">
+            <p className="text-sm font-semibold">No blood requests match filter criteria.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-slate-50/50 dark:bg-slate-800/50">
+            <table className="w-full text-left text-[14px]">
+              <thead className="border-b border-slate-200 text-xs font-bold text-[#374151] uppercase tracking-wider bg-slate-50">
                 <tr>
-                  <th className="py-3 px-4">Req ID</th>
-                  <th className="py-3 px-4">Hospital Facility</th>
-                  <th className="py-3 px-4">Blood Group</th>
-                  <th className="py-3 px-4">Quantity</th>
-                  <th className="py-3 px-4">Fulfilled</th>
-                  <th className="py-3 px-4">Priority</th>
-                  <th className="py-3 px-4">Required Datetime</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Notes</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="py-3.5 px-4">Req ID</th>
+                  <th className="py-3.5 px-4">Hospital Facility</th>
+                  <th className="py-3.5 px-4">Blood Group</th>
+                  <th className="py-3.5 px-4">Quantity</th>
+                  <th className="py-3.5 px-4">Fulfilled</th>
+                  <th className="py-3.5 px-4">Priority</th>
+                  <th className="py-3.5 px-4">Required Datetime</th>
+                  <th className="py-3.5 px-4">Status</th>
+                  <th className="py-3.5 px-4">Notes</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-sans">
+              <tbody className="divide-y divide-slate-100 font-sans">
                 {requests.map((r) => (
-                  <tr key={r.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
-                    <td className="py-3 px-4 font-mono font-medium text-slate-500">#{r.id}</td>
-                    <td className="py-3 px-4 font-semibold text-slate-900 dark:text-white">
+                  <tr key={r.id} className="hover:bg-[#FEF2F2] transition-colors border-b border-slate-100">
+                    <td className="py-3.5 px-4 font-mono font-medium text-[#4B5563]">#{r.id}</td>
+                    <td className="py-3.5 px-4 font-semibold text-[#111827]">
                       {r.hospital_name || "Hospital"}
                     </td>
-                    <td className="py-3 px-4">
-                      <span className="font-extrabold text-base text-red-600 dark:text-red-500">
+                    <td className="py-3.5 px-4">
+                      <span className="font-extrabold text-base text-[#B91C1C]">
                         {r.blood_group}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
+                    <td className="py-3.5 px-4 font-bold text-[#111827]">
                       {r.quantity} units
                     </td>
-                    <td className="py-3 px-4 text-slate-500">{r.fulfilled_quantity} units</td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4 text-[#4B5563] font-medium">{r.fulfilled_quantity} units</td>
+                    <td className="py-3.5 px-4">
                       <span
-                        className={`text-xs px-2.5 py-0.5 rounded-full font-semibold border ${
+                        className={`text-xs px-2.5 py-1 rounded-md font-bold border ${
                           r.priority === "Critical"
-                            ? "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 border-rose-300"
+                            ? "bg-red-100 text-red-950 border-red-300"
                             : r.priority === "Urgent"
-                            ? "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-300"
-                            : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-300"
+                            ? "bg-amber-100 text-amber-950 border-amber-300"
+                            : "bg-slate-100 text-slate-800 border-slate-300"
                         }`}
                       >
                         {r.priority}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-xs text-slate-500 whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-xs font-mono text-[#4B5563] whitespace-nowrap">
                       {new Date(r.required_datetime).toLocaleString([], {
                         month: "short",
                         day: "numeric",
@@ -291,32 +291,32 @@ export default function RequestsPage() {
                         minute: "2-digit",
                       })}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <span
-                        className={`text-xs px-2.5 py-0.5 rounded-full font-semibold border ${
+                        className={`text-xs px-2.5 py-1 rounded-md font-bold border ${
                           r.status === "Fulfilled"
-                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-300"
+                            ? "bg-emerald-100 text-emerald-950 border-emerald-300"
                             : r.status === "Approved"
-                            ? "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-300"
+                            ? "bg-blue-100 text-blue-950 border-blue-300"
                             : r.status === "Rejected"
-                            ? "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border-red-300"
-                            : "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-300"
+                            ? "bg-red-100 text-red-950 border-red-300"
+                            : "bg-amber-100 text-amber-950 border-amber-300"
                         }`}
                       >
                         {r.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-xs text-slate-500 max-w-xs truncate" title={r.notes}>
+                    <td className="py-3.5 px-4 text-[14px] text-[#374151] max-w-xs truncate" title={r.notes}>
                       {r.notes || "—"}
                     </td>
-                    <td className="py-3 px-4 text-right space-x-1.5 whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
                       {(user?.role === "blood_bank_staff" || user?.role === "admin") && (
                         <>
                           {r.status === "Submitted" && (
                             <button
                               onClick={() => handleApprove(r.id)}
                               disabled={actionLoading}
-                              className="px-2.5 py-1 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                              className="px-3 py-1.5 text-xs font-bold bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm"
                             >
                               Approve
                             </button>
@@ -328,7 +328,7 @@ export default function RequestsPage() {
                                 setFulfillUnits(r.quantity - r.fulfilled_quantity);
                                 setFulfillNote("");
                               }}
-                              className="px-2.5 py-1 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 shadow-sm"
+                              className="px-3 py-1.5 text-xs font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 shadow-sm"
                             >
                               Fulfill
                             </button>
@@ -337,7 +337,7 @@ export default function RequestsPage() {
                             <button
                               onClick={() => handleReject(r.id)}
                               disabled={actionLoading}
-                              className="px-2 py-1 text-xs font-semibold text-slate-400 hover:text-red-600"
+                              className="px-2.5 py-1.5 text-xs font-bold text-[#374151] hover:text-red-700"
                             >
                               Reject
                             </button>
@@ -355,28 +355,28 @@ export default function RequestsPage() {
 
       {/* Emergency Request Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-slate-200 shadow-2xl">
             <div className="flex items-center space-x-2 text-red-600 mb-2">
               <Zap className="w-5 h-5 fill-red-600" />
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                Submit Blood Request
+              <h3 className="text-xl font-bold text-[#111827]">
+                Submit Emergency Blood Request
               </h3>
             </div>
-            <p className="text-xs text-slate-500 mb-4">
+            <p className="text-sm text-[#4B5563] mb-4">
               Dispatches emergency requirement to central blood banks and triggers automated priority notification.
             </p>
 
             <form onSubmit={handleCreateRequest} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-bold uppercase text-[#374151] mb-1">
                     Blood Group
                   </label>
                   <select
                     value={bloodGroup}
                     onChange={(e) => setBloodGroup(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-bold"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-[#111827] font-bold text-sm focus:border-red-500 focus:outline-none"
                   >
                     {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((g) => (
                       <option key={g} value={g}>
@@ -387,7 +387,7 @@ export default function RequestsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-bold uppercase text-[#374151] mb-1">
                     Quantity (Units)
                   </label>
                   <input
@@ -396,7 +396,7 @@ export default function RequestsPage() {
                     max={50}
                     value={quantity}
                     onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-[#111827] font-bold text-sm focus:border-red-500 focus:outline-none"
                     required
                   />
                 </div>
@@ -404,13 +404,13 @@ export default function RequestsPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-bold uppercase text-[#374151] mb-1">
                     Priority
                   </label>
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-[#111827] font-bold text-sm focus:border-red-500 focus:outline-none"
                   >
                     <option value="Normal">Normal</option>
                     <option value="Urgent">Urgent</option>
@@ -419,21 +419,21 @@ export default function RequestsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-bold uppercase text-[#374151] mb-1">
                     Required By
                   </label>
                   <input
                     type="datetime-local"
                     value={requiredDate}
                     onChange={(e) => setRequiredDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-[#111827] focus:border-red-500 focus:outline-none"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#374151] mb-1">
                   Clinical Emergency Notes
                 </label>
                 <textarea
@@ -441,22 +441,22 @@ export default function RequestsPage() {
                   placeholder="e.g. Trauma Bay 1 acute hemorrhage, O- universal donor required immediately"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-[#111827] font-medium focus:border-red-500 focus:outline-none"
                 />
               </div>
 
-              <div className="flex items-center justify-end space-x-3 pt-2">
+              <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-400"
+                  className="px-4 py-2 text-sm font-bold text-[#374151] hover:text-[#111827]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitLoading}
-                  className="px-4 py-2 text-xs font-semibold bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md shadow-red-500/20"
+                  className="px-5 py-2.5 text-sm font-bold bg-[#DC2626] hover:bg-red-700 text-white rounded-xl shadow-md transition-colors"
                 >
                   {submitLoading ? "Transmitting..." : "Submit Emergency Order"}
                 </button>
@@ -468,18 +468,18 @@ export default function RequestsPage() {
 
       {/* Fulfillment Modal Dialog */}
       {selectedRequest && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-slate-200 shadow-2xl">
+            <h3 className="text-xl font-bold text-[#111827] mb-2">
               Fulfill Blood Request #{selectedRequest.id}
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
-              Authorized release of <span className="font-bold text-red-600">{selectedRequest.blood_group}</span> units for <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedRequest.hospital_name}</span>. Inventory will be automatically deducted using FEFO (First-Expiry-First-Out).
+            <p className="text-sm text-[#4B5563] mb-4">
+              Authorized release of <span className="font-extrabold text-[#B91C1C]">{selectedRequest.blood_group}</span> units for <span className="font-bold text-[#111827]">{selectedRequest.hospital_name}</span>. Inventory will be automatically deducted using FEFO (First-Expiry-First-Out).
             </p>
 
             <form onSubmit={handleFulfillSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#374151] mb-1">
                   Units to Dispatch (Remaining: {selectedRequest.quantity - selectedRequest.fulfilled_quantity})
                 </label>
                 <input
@@ -488,13 +488,13 @@ export default function RequestsPage() {
                   max={selectedRequest.quantity - selectedRequest.fulfilled_quantity}
                   value={fulfillUnits}
                   onChange={(e) => setFulfillUnits(parseInt(e.target.value) || 0)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-[#111827] font-bold text-sm focus:border-red-500 focus:outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#374151] mb-1">
                   Dispatch Notes / Courier Ref
                 </label>
                 <input
@@ -502,22 +502,22 @@ export default function RequestsPage() {
                   placeholder="e.g. Dispatched via Transit Unit #2"
                   value={fulfillNote}
                   onChange={(e) => setFulfillNote(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-[#111827] focus:border-red-500 focus:outline-none"
                 />
               </div>
 
-              <div className="flex items-center justify-end space-x-3 pt-3">
+              <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setSelectedRequest(null)}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-400"
+                  className="px-4 py-2 text-sm font-bold text-[#374151] hover:text-[#111827]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm"
+                  className="px-5 py-2.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md transition-colors"
                 >
                   {actionLoading ? "Deducting from Inventory..." : "Confirm & Fulfill"}
                 </button>

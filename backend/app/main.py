@@ -49,14 +49,73 @@ app = FastAPI(
 )
 
 # CORS configuration
+CORS_ALLOWED = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+for origin in settings.CORS_ORIGINS:
+    if origin not in CORS_ALLOWED:
+        CORS_ALLOWED.append(origin)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=CORS_ALLOWED,
     allow_origin_regex=r"https?://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def catch_exceptions_middleware(request, call_next):
+    try:
+        return await call_next(request)
+    except Exception as exc:
+        import traceback
+        from fastapi.responses import JSONResponse
+
+        origin = request.headers.get("origin") or "http://localhost:3000"
+        trace = traceback.format_exc()
+        logger.error(f"Unhandled exception on {request.method} {request.url.path}:\n{trace}")
+
+        headers = {
+            "Access-Control-Allow-Origin": origin if (origin in CORS_ALLOWED or origin.startswith("http://localhost:") or origin.startswith("http://127.0.0.1:")) else "http://localhost:3000",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Headers": "*, Authorization, Content-Type",
+            "Access-Control-Allow-Methods": "*",
+        }
+        return JSONResponse(
+            status_code=500,
+            content={"detail": f"Internal Server Error: {str(exc)}"},
+            headers=headers,
+        )
+
+
+@app.exception_handler(Exception)
+@app.exception_handler(500)
+async def global_exception_handler(request, exc: Exception):
+    import traceback
+    from fastapi.responses import JSONResponse
+
+    origin = request.headers.get("origin") or "http://localhost:3000"
+    trace = traceback.format_exc()
+    logger.error(f"Unhandled exception on {request.method} {request.url.path}:\n{trace}")
+
+    headers = {
+        "Access-Control-Allow-Origin": origin if (origin in CORS_ALLOWED or origin.startswith("http://localhost:") or origin.startswith("http://127.0.0.1:")) else "http://localhost:3000",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Headers": "*, Authorization, Content-Type",
+        "Access-Control-Allow-Methods": "*",
+    }
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal Server Error: {str(exc)}"},
+        headers=headers,
+    )
+
 
 # Include primary API router
 app.include_router(api_router, prefix=settings.API_V1_STR)

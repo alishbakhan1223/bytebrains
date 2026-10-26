@@ -16,6 +16,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { api } from "@/lib/api";
+import PasswordInput from "@/components/PasswordInput";
+import DonateMotivation from "@/components/DonateMotivation";
 
 type AuthMode = "signin" | "signup";
 type RoleType = "hospital_staff" | "blood_bank_staff" | "admin";
@@ -134,9 +136,23 @@ function LoginForm() {
     }
   };
 
+  const handleScrollToSignup = () => {
+    setMode("signup");
+    const el = document.getElementById("auth-card");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-4 py-10">
-      <div className="max-w-xl w-full space-y-6 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl shadow-slate-200/50 dark:shadow-none">
+    <div className="flex flex-col min-h-screen">
+      <div className="min-h-[85vh] flex items-center justify-center px-4 py-10">
+        <div
+          id="auth-card"
+          className="max-w-xl w-full space-y-6 bg-white/92 dark:bg-slate-900/90 backdrop-blur-2xl p-6 sm:p-8 rounded-3xl border border-white/60 dark:border-slate-700/60 shadow-2xl shadow-black/30"
+        >
         {/* Header */}
         <div className="text-center">
           <div className="w-12 h-12 bg-red-600 rounded-2xl mx-auto flex items-center justify-center text-white shadow-md shadow-red-500/20 mb-3">
@@ -226,19 +242,12 @@ function LoginForm() {
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
                 Password
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <Lock className="w-4 h-4" />
-                </div>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm transition-all"
-                />
-              </div>
+              <PasswordInput
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+              />
             </div>
 
             <button
@@ -412,38 +421,24 @@ function LoginForm() {
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
                   Password
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <input
-                    type="password"
-                    required
-                    value={signupPassword}
-                    onChange={(e) => setSignupPassword(e.target.value)}
-                    placeholder="Min. 6 chars"
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm transition-all"
-                  />
-                </div>
+                <PasswordInput
+                  required
+                  value={signupPassword}
+                  onChange={(e) => setSignupPassword(e.target.value)}
+                  placeholder="Min. 6 chars"
+                />
               </div>
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
                   Confirm Password
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <input
-                    type="password"
-                    required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Repeat password"
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm transition-all"
-                  />
-                </div>
+                <PasswordInput
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Repeat password"
+                />
               </div>
             </div>
 
@@ -465,7 +460,11 @@ function LoginForm() {
         )}
       </div>
     </div>
-  );
+
+    {/* Motivational Why Donate Blood Section */}
+    <DonateMotivation onBecomeDonor={handleScrollToSignup} />
+  </div>
+);
 }
 
 export default function LoginPage() {

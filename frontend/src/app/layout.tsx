@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import { WebSocketProvider } from "@/lib/useWebSocket";
 import RealtimeToastListener from "@/components/RealtimeToastListener";
+import PageBackground from "@/components/PageBackground";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,10 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col antialiased">
+      <body className="min-h-screen text-slate-900 dark:text-slate-100 flex flex-col antialiased relative selection:bg-red-500 selection:text-white">
         <WebSocketProvider>
+          <PageBackground />
           <Navbar />
-          <main className="flex-1 bg-slate-100 dark:bg-slate-950">{children}</main>
+          <main className="flex-1 relative z-0">{children}</main>
           <RealtimeToastListener />
         </WebSocketProvider>
       </body>
