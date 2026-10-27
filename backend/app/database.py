@@ -1,6 +1,8 @@
+import os
 import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.pool import NullPool
 from app.config import settings
 
 logger = logging.getLogger("bloodbridge.database")
@@ -15,10 +17,17 @@ def _connect_args(url: str) -> dict:
 
 
 try:
+    engine_kwargs = {
+        "connect_args": _connect_args(settings.DATABASE_URL),
+        "pool_pre_ping": True,
+    }
+    # In serverless environments or Postgres on Neon, use NullPool to avoid connection pooling issues
+    if "postgresql" in settings.DATABASE_URL or os.environ.get("VERCEL"):
+        engine_kwargs["poolclass"] = NullPool
+
     engine = create_engine(
         settings.DATABASE_URL,
-        connect_args=_connect_args(settings.DATABASE_URL),
-        pool_pre_ping=True,
+        **engine_kwargs,
     )
 except Exception as exc:
     # Keep the app bootable so the error can be diagnosed instead of crashing at import

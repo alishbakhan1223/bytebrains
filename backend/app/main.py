@@ -1,3 +1,4 @@
+import os
 import asyncio
 import logging
 from contextlib import asynccontextmanager
@@ -27,15 +28,19 @@ async def lifespan(app: FastAPI):
         logger.exception("Database initialization failed")
         database.DATABASE_INIT_ERROR = database.DATABASE_INIT_ERROR or f"{type(exc).__name__}: {exc}"
 
-    # Launch background automation loop (runs silently in background)
-    auto_task = asyncio.create_task(run_periodic_automation(interval_seconds=1800, initial_delay=5))
+    # Launch background automation loop only if enabled and NOT running on Vercel serverless
+    auto_task = None
+    is_serverless = bool(os.environ.get("VERCEL")) or not settings.AUTOMATION_ENABLED
+    if not is_serverless:
+        auto_task = asyncio.create_task(run_periodic_automation(interval_seconds=1800, initial_delay=5))
     yield
     # Shutdown
-    auto_task.cancel()
-    try:
-        await auto_task
-    except asyncio.CancelledError:
-        pass
+    if auto_task:
+        auto_task.cancel()
+        try:
+            await auto_task
+        except asyncio.CancelledError:
+            pass
 
 
 app = FastAPI(

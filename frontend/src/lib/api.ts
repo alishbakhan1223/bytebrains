@@ -233,7 +233,13 @@ export const api = {
     request<any>(`/automation/trigger/${workflowId}`, { method: "POST" }),
 
   // Notifications
-  getNotifications: () => request<any[]>("/notifications"),
+  getNotifications: (params?: { limit?: number; notification_type?: string }) => {
+    const q = new URLSearchParams();
+    if (params?.limit) q.set("limit", params.limit.toString());
+    if (params?.notification_type) q.set("notification_type", params.notification_type);
+    const qs = q.toString() ? `?${q.toString()}` : "";
+    return request<any[]>(`/notifications${qs}`);
+  },
   markNotificationRead: (id: number) =>
     request<any>(`/notifications/${id}/read`, { method: "PUT" }),
 

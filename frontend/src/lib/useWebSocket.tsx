@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback, createContext, useContext } from "react";
-import { getAuthToken } from "@/lib/api";
+import { getAuthToken, api } from "@/lib/api";
 
 export interface RealtimeMessage {
   id?: string;
@@ -33,11 +33,48 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<RealtimeMessage[]>([]);
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isPollingRef = useRef<boolean>(false);
+
+  // Helper to poll notifications endpoint (used on serverless/Vercel or WS failure)
+  const pollNotifications = useCallback(async () => {
+    const token = getAuthToken();
+    if (!token) {
+      setIsConnected(false);
+      return;
+    }
+
+    try {
+      const data = await api.getNotifications({ limit: 20 });
+      if (Array.isArray(data)) {
+        setIsConnected(true);
+        const mapped: RealtimeMessage[] = data.map((n: any) => ({
+          id: String(n.id),
+          type: n.type || "NOTIFICATION",
+          title: (n.type || "Notification").replace(/_/g, " "),
+          message: n.message,
+          severity: n.type?.includes("CRITICAL") ? "critical" : (n.type?.includes("ALERT") ? "warning" : "info"),
+          timestamp: n.created_at ? new Date(n.created_at).toLocaleTimeString() : new Date().toLocaleTimeString(),
+        }));
+        setNotifications(mapped);
+      }
+    } catch (err) {
+      // Ignore network errors during polling
+    }
+  }, []);
 
   const connect = useCallback(() => {
     const token = getAuthToken();
     if (!token) {
       setIsConnected(false);
+      return;
+    }
+
+    const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+
+    // In deployed/serverless environments without WebSocket support, rely on periodic polling
+    if (!isLocal) {
+      isPollingRef.current = true;
+      pollNotifications();
       return;
     }
 
@@ -54,6 +91,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
 
       socket.onopen = () => {
         setIsConnected(true);
+        isPollingRef.current = false;
       };
 
       socket.onmessage = (event) => {
@@ -78,7 +116,11 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       socket.onclose = () => {
         setIsConnected(false);
         socketRef.current = null;
-        // Exponential/delayed reconnect
+        // Fall back to polling if closed or failed
+        if (!isPollingRef.current) {
+          isPollingRef.current = true;
+          pollNotifications();
+        }
         if (!reconnectTimeoutRef.current) {
           reconnectTimeoutRef.current = setTimeout(() => {
             reconnectTimeoutRef.current = null;
@@ -92,25 +134,30 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       };
     } catch (err) {
       setIsConnected(false);
+      isPollingRef.current = true;
+      pollNotifications();
     }
-  }, []);
+  }, [pollNotifications]);
 
   useEffect(() => {
     connect();
 
-    // Check token periodically (e.g. user just logged in)
+    // Check connection / poll notifications every 15s on deployed sites
     const interval = setInterval(() => {
-      if (!socketRef.current || socketRef.current.readyState === WebSocket.CLOSED) {
+      const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+      if (!isLocal || isPollingRef.current) {
+        pollNotifications();
+      } else if (!socketRef.current || socketRef.current.readyState === WebSocket.CLOSED) {
         connect();
       }
-    }, 5000);
+    }, 15000);
 
     return () => {
       clearInterval(interval);
       if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
       if (socketRef.current) socketRef.current.close();
     };
-  }, [connect]);
+  }, [connect, pollNotifications]);
 
   const dismissNotification = useCallback((id: string) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));

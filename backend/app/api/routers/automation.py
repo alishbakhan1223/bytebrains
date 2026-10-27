@@ -135,6 +135,53 @@ def trigger_workflow_manually(
         raise HTTPException(status_code=400, detail=f"Unknown workflow id: {workflow_id}")
 
 
+# Vercel Cron Endpoints (Invoked periodically via GET by Vercel Cron)
+@router.get("/cron/{schedule_type}")
+def cron_trigger_workflow(
+    schedule_type: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Vercel Cron trigger endpoint: executes daily or weekly automated checks in serverless runtime.
+    Does not require interactive user session; logs actions to automation ledger.
+    """
+    if schedule_type == "daily":
+        res_inv = run_low_inventory_check(db)
+        res_exp = run_expiry_monitoring(db)
+        risks = compute_risk_assessments(db)
+        event = log_automation_event(
+            db,
+            workflow_name="Daily Scheduled Sweep",
+            event_type="CRON_DAILY_SWEEP",
+            payload={"inventory": res_inv, "expiry": res_exp, "risk_count": len(risks)},
+            status="SUCCESS",
+        )
+        return {
+            "status": "executed",
+            "cron": "daily",
+            "event_id": event.id,
+            "results": {"low_inventory": res_inv, "expiry_monitoring": res_exp},
+        }
+    elif schedule_type == "weekly":
+        event = log_automation_event(
+            db,
+            workflow_name=WORKFLOW_NAMES["weekly-report"],
+            event_type="CRON_WEEKLY_REPORT",
+            payload={"recipient": "admin@bloodbridge.org", "summary": "Vercel Cron weekly digest generated"},
+            status="SUCCESS",
+        )
+        return {"status": "executed", "cron": "weekly", "event_id": event.id}
+    elif schedule_type in ("low-inventory", "expiry-alert", "shortage-risk"):
+        if schedule_type == "low-inventory":
+            return {"status": "executed", "result": run_low_inventory_check(db)}
+        elif schedule_type == "expiry-alert":
+            return {"status": "executed", "result": run_expiry_monitoring(db)}
+        else:
+            return {"status": "executed", "result": compute_risk_assessments(db)}
+    else:
+        raise HTTPException(status_code=400, detail=f"Unknown cron schedule: {schedule_type}")
+
+
 # Webhook receiving endpoints (called by external services or internal triggers)
 @router.post("/webhook/emergency")
 def webhook_emergency(
